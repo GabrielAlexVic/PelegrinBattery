@@ -1,4 +1,4 @@
-package com.example.batterylevel.models;
+package com.example.batterylevel.domain.models;
 
 import android.os.BatteryManager;
 

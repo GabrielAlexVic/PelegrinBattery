@@ -11,7 +11,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.batterylevel.application.handler.BatteryHandler;
-import com.example.batterylevel.models.Battery;
+import com.example.batterylevel.domain.models.Battery;
+import com.example.batterylevel.domain.services.BatteryService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,10 +33,11 @@ public class MainActivity extends AppCompatActivity {
             BatteryHandler.updateBatteryStatus(new Runnable() {
                 @Override
                 public void run() {
+                    BatteryService _batteryService = new BatteryService();
                     batteryLevel.setText("Nível: " + battery.getLevel() + "%");
-                    batteryHealth.setText("Saude da bateria: " + checkHealth(battery.getHealth()));
-                    batteryStatus.setText("Estado da bateria: " + chargerStatus(battery.getStatus()));
-                    chargerConnection.setText("Conector de Energia: " + checkConector(battery.getConnection()));
+                    batteryHealth.setText("Saúde da bateria: " + _batteryService.checkHealth(battery.getHealth()));
+                    batteryStatus.setText("Estado da bateria: " + _batteryService.chargerStatus(battery.getStatus()));
+                    chargerConnection.setText("Conector de Energia: " + _batteryService.checkConector(battery.getConnection()));
                 }
             });
         }
@@ -51,49 +53,6 @@ public class MainActivity extends AppCompatActivity {
         batteryStatus = findViewById(R.id.batteryStatus);
         chargerConnection = findViewById(R.id.chargerConnection);
         this.registerReceiver(this.batterylevelReciever, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-    }
-
-    public String checkHealth(int health) {
-        switch(health) {
-            case 1:
-                return "Unknown";
-            case 2:
-                return "Good";
-            case 3:
-                return "Overheated";
-            case 4:
-                return "Dead";
-            case 5:
-                return "Overvoltage";
-            case 6:
-                return "Failed";
-            default:
-                return "Unknown";
-        }
-    }
-
-    public String chargerStatus(int status) {
-        switch(status) {
-            case 1:
-                return "Unknown";
-            case 2:
-                return "Charging";
-            case 3:
-                return "Discharging";
-            case 4:
-                return "Not Charging";
-            case 5:
-                return "Full";
-            default:
-                return "Unknown";
-        }
-    }
-
-    public String checkConector(int connectorStatus) {
-        if(connectorStatus == 0)
-            return "Nenhum";
-        else
-            return "AC Charger";
     }
     
 }
